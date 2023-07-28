@@ -1,13 +1,36 @@
+const quotehtml = document.getElementById("quote-text");
+const authorhtml = document.getElementById("author");
+const tiwterbtn = document.getElementById("Twitter");
+const newQoute = document.getElementById("new-quote");
 const url = "https://type.fit/api/quotes";
 var result = [];
+var quote;
+function writeQuote() {
+	quote = result[Math.floor(Math.random() * result.length)];
+	quotehtml.innerHTML=quote.text;	
+	if (!quote.author) {
+		authorhtml.innerHTML="Unknown";
+	}else{
+		authorhtml.innerHTML=quote.author;
+	}
+}
 async function getQuote() {
 try {
 	const response = await fetch(url);
-	const result = await response.json();
-	console.log(result[3]);
+    result = await response.json();
+	writeQuote();
 } catch (error) {
 	console.log(error);
 }
 }
 
+function tweetQuote() {
+	const twitterurl = `https://twitter.com/intent/tweet?text=${quote.text} - ${quote.author}`;
+	window.open(twitterurl, '_blank');
+}
+
+newQoute.addEventListener("click", writeQuote);
+tiwterbtn.addEventListener("click", tweetQuote);
+
 getQuote();
+
